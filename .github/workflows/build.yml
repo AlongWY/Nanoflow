@@ -10,8 +10,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_wheels:
-    name: Build Wheel
+  build:
+    name: Build Shared Library
     runs-on: ubuntu-latest
     container:
       image: pytorch/manylinux2_28-builder:cuda11.8
@@ -37,11 +37,11 @@ jobs:
         env:
           PYBIN: /opt/python/${{ env.PYTHON_VERSION }}/bin
         run: |
-          yum install -y pigz openmpi openmpi-devel spdlog spdlog-devel libibverbs rdma-core-devel
+          yum install -y pigz clang-tools-extra openmpi openmpi-devel spdlog spdlog-devel libibverbs rdma-core-devel numactl numactl-devel numactl-libs
           pwd && ls -la
           sed -i '256d' 3rdparty/mscclpp/src/bootstrap/bootstrap.cc
           cat 3rdparty/patches/spdlog/*.patch | patch -p1 -d 3rdparty/spdlog
-          $PYBIN/pip install cmake mypy pybind11
+          $PYBIN/pip install cmake mypy pybind11 black
           cd pipeline/src/generate-gemm && $PYBIN/python genGEMM.py && cd ../../
       
       - name: Build Library
