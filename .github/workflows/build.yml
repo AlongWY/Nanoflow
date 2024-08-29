@@ -60,17 +60,17 @@ jobs:
           which mpicxx && mpicxx --version
           ${PYBIN}/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${PREFIX} -DBUILD_PYTHON_BINDINGS=OFF -DBYPASS_GPU_CHECK=ON -DUSE_CUDA=ON ..
           make -j$(nproc)
-          tar -zcvf pllm_py${{ matrix.python-version }}cu121.tgz pllm_python.* test_*
+          tar -zcvf pllm_cu121_py${{ matrix.python-version }}.tgz pllm_python.* test_*
       
       - uses: actions/upload-artifact@v4
         with:
-          name: pllm_py${{ matrix.python-version }}cu121.tgz
+          name: pllm_cu121_py${{ matrix.python-version }}.tgz
           path: |
-            pipeline/build/pllm_py${{ matrix.python-version }}cu121.tgz
+            pipeline/build/pllm_cu121_py${{ matrix.python-version }}.tgz
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            pipeline/build/pllm_py${{ matrix.python-version }}cu121.tgz
+            pipeline/build/pllm_cu121_py${{ matrix.python-version }}.tgz
