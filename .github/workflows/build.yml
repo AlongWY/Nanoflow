@@ -65,4 +65,14 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: nanoflow
-          path: pipeline/build
+          path: |
+            pipeline/build/pllm_python.*
+            pipeline/build/test_*
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            pipeline/build/pllm_python.*
+            pipeline/build/test_*
