@@ -37,7 +37,7 @@ jobs:
         env:
           PYBIN: /opt/python/${{ env.PYTHON_VERSION }}/bin
         run: |
-          yum install -y pigz openmpi openmpi-devel spdlog spdlog-devel
+          yum install -y pigz openmpi openmpi-devel spdlog spdlog-devel libibverbs rdma-core-devel
           pwd && ls -la
           sed -i '256d' 3rdparty/mscclpp/src/bootstrap/bootstrap.cc
           cat 3rdparty/patches/spdlog/*.patch | patch -p1 -d 3rdparty/spdlog
@@ -46,7 +46,7 @@ jobs:
       
       - name: Build Library
         env:
-          PATH: ${{ env.PATH }}:/usr/li64/openmpi/bin
+          PATH: ${{ env.PATH }}:/usr/lib64/openmpi/bin
           PYBIN: /opt/python/${{ env.PYTHON_VERSION }}/bin
           PREFIX: /opt/python/${{ env.PYTHON_VERSION }};/usr/lib64/openmpi
           pybind11_DIR: /opt/python/${{ env.PYTHON_VERSION }}/lib/python${{ matrix.python-version }}/site-packages/pybind11
