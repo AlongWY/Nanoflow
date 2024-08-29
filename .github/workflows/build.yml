@@ -31,6 +31,7 @@ jobs:
       - name: Set up Environments
         run: |
           echo "PYTHON_VERSION=$(python3 -c "from os import environ as env; print({'3.7': 'cp37-cp37m', '3.8': 'cp38-cp38', '3.9': 'cp39-cp39', '3.10': 'cp310-cp310', '3.11': 'cp311-cp311', '3.12': 'cp312-cp312' }['${{ matrix.python-version }}'])")" >> $GITHUB_ENV
+          echo "PATH=$PATH" >> $GITHUB_ENV
 
       - name: Set up Packages
         env:
@@ -57,7 +58,7 @@ jobs:
           cd pipeline && mkdir -p build && cd build
           which cmake && cmake --version
           which mpicxx && mpicxx --version
-          ${PYBIN}/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${PREFIX} -DMPI_CXX_COMPILER=/usr/lib/openmpi/bin/mpicxx -DMPI_HOME=/usr/lib/openmpi -DBUILD_PYTHON_BINDINGS=OFF -DBYPASS_GPU_CHECK=ON -DUSE_CUDA=ON ..
+          ${PYBIN}/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${PREFIX} -DBUILD_PYTHON_BINDINGS=OFF -DBYPASS_GPU_CHECK=ON -DUSE_CUDA=ON ..
           make -j$(nproc)
 
 
