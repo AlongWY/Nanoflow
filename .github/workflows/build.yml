@@ -55,7 +55,8 @@ jobs:
         run: |
           cd pipeline && mkdir -p build && cd build
           which cmake && cmake --version
-          ${PYBIN}/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${PREFIX} -DMPIEXEC_EXECUTABLE=/usr/lib/openmpi/bin/mpiexec -DBUILD_PYTHON_BINDINGS=OFF -DBYPASS_GPU_CHECK=ON -DUSE_CUDA=ON ..
+          which mpicxx && mpicxx --version
+          ${PYBIN}/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${PREFIX} -DMPI_CXX_COMPILER=/usr/lib/openmpi/bin/mpicxx -DMPI_HOME=/usr/lib/openmpi -DBUILD_PYTHON_BINDINGS=OFF -DBYPASS_GPU_CHECK=ON -DUSE_CUDA=ON ..
           make -j$(nproc)
 
 
