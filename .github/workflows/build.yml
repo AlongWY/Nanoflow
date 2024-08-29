@@ -46,7 +46,7 @@ jobs:
       - name: Build Library
         env:
           PYBIN: /opt/python/${{ env.PYTHON_VERSION }}/bin
-          PREFIX: /opt/python/${{ env.PYTHON_VERSION }}
+          PREFIX: /opt/python/${{ env.PYTHON_VERSION }};/usr/lib/openmpi
           pybind11_DIR: /opt/python/${{ env.PYTHON_VERSION }}/lib/python${{ matrix.python-version }}/site-packages/pybind11
           CUDACXX: "/usr/local/cuda-11.8/bin/nvcc"
           CUDA_HOME: "/usr/local/cuda-11.8"
