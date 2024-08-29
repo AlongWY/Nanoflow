@@ -20,8 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["cp37-cp37m"]
-        torch-version: ["2.0.1"]
+        python-version: ["3.7"]
 
     steps:
       - name: Checkout
@@ -30,10 +29,14 @@ jobs:
           submodules: recursive
 
       - name: Set up Environments
-        env:
-          PYBIN: /opt/python/${{ matrix.python-version }}/bin
         run: |
-          yum install -y openmpi pigz openmpi3-devel spdlog spdlog-devel
+          echo "PYTHON_VERSION=$(python -c "from os import environ as env; print({'3.7': 'cp37-cp37m', '3.8': 'cp38-cp38', '3.9': 'cp39-cp39', '3.10': 'cp310-cp310', '3.11': 'cp311-cp311', '3.12': 'cp312-cp312' }[${{ matrix.python-version }}])")" >> $GITHUB_ENV
+
+      - name: Set up Packages
+        env:
+          PYBIN: /opt/python/${{ env.PYTHON_VERSION }}/bin
+        run: |
+          yum install -y pigz openmpi openmpi-devel spdlog spdlog-devel
           cd 3rdparty/mscclpp && git reset --hard cdaf3aea3d767ba65dd3b08984d76bd50615f92e && sed -i '256d' ./src/bootstrap/bootstrap.cc && cd ../../
           for repo in spdlog; do
             cat 3rdparty/patches/${repo}/*.patch | patch -p1 -d 3rdparty/${repo}
@@ -43,9 +46,9 @@ jobs:
       
       - name: Build Library
         env:
-          PYBIN: /opt/python/${{ matrix.python-version }}/bin
-          PREFIX: /opt/python/${{ matrix.python-version }}
-          pybind11_DIR: /opt/python/${{ matrix.python-version }}/lib/python3.7/site-packages/pybind11
+          PYBIN: /opt/python/${{ env.PYTHON_VERSION }}/bin
+          PREFIX: /opt/python/${{ env.PYTHON_VERSION }}
+          pybind11_DIR: /opt/python/${{ env.PYTHON_VERSION }}/lib/python${{ matrix.python-version }}/site-packages/pybind11
         run: |
           mkdir -p build && cd build
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${PREFIX} -DBUILD_PYTHON_BINDINGS=OFF -DBYPASS_GPU_CHECK=ON -DUSE_CUDA=ON ..
