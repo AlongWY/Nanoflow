@@ -1,0 +1,54 @@
+name: Build manylinx wheels and deploy
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
+
+jobs:
+  build_wheels:
+    name: Build Wheel
+    runs-on: ubuntu-latest
+    container:
+      image: pytorch/manylinux2_28-builder:cuda11.8
+
+    # see https://github.com/pytorch/pytorch/blob/main/RELEASE.md#release-compatibility-matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["cp37-cp37m"]
+        torch-version: ["2.0.1"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Environments
+        env:
+          PYBIN: /opt/python/${{ matrix.python-version }}/bin
+        run: |
+          yum install -y openmpi3 openmpi3-dev pigz
+          cd 3rdparty/mscclpp && git reset --hard cdaf3aea3d767ba65dd3b08984d76bd50615f92e && sed -i '256d' ./src/bootstrap/bootstrap.cc && cd ../../
+          for repo in spdlog; do
+            cat 3rdparty/patches/${repo}/*.patch | patch -p1 -d 3rdparty/${repo}
+          done
+          $PYBIN/pip install cmake mypy pybind11
+          cd pipeline/src/generate-gemm && $PYBIN/python genGEMM.py && cd ../../
+      
+      - name: Build Library
+        env:
+          PYBIN: /opt/python/${{ matrix.python-version }}/bin
+          PREFIX: /opt/python/${{ matrix.python-version }}
+          pybind11_DIR: /opt/python/${{ matrix.python-version }}/lib/python3.7/site-packages/pybind11
+        run: |
+          mkdir -p build && cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${PREFIX} -DBUILD_PYTHON_BINDINGS=OFF -DBYPASS_GPU_CHECK=ON -DUSE_CUDA=ON ..
+          make -j$(nproc)
+
+
