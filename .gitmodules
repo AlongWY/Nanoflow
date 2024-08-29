@@ -10,7 +10,6 @@
 [submodule "3rdparty/mscclpp"]
 	path = 3rdparty/mscclpp
 	url = https://github.com/microsoft/mscclpp.git
-	commit = cdaf3aea3d767ba65dd3b08984d76bd50615f92e
 [submodule "3rdparty/spdlog"]
 	path = 3rdparty/spdlog
 	url = https://github.com/gabime/spdlog.git
