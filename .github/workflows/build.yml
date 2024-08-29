@@ -48,6 +48,10 @@ jobs:
           PYBIN: /opt/python/${{ env.PYTHON_VERSION }}/bin
           PREFIX: /opt/python/${{ env.PYTHON_VERSION }}
           pybind11_DIR: /opt/python/${{ env.PYTHON_VERSION }}/lib/python${{ matrix.python-version }}/site-packages/pybind11
+          CUDACXX: "/usr/local/cuda-11.8/bin/nvcc"
+          CUDA_HOME: "/usr/local/cuda-11.8"
+          CFLAGS: "-I/usr/include" 
+          LDFLAGS: "-L/usr/lib"
         run: |
           cd pipeline && mkdir -p build && cd build
           which cmake && cmake --version
