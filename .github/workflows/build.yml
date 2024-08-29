@@ -50,7 +50,7 @@ jobs:
           pybind11_DIR: /opt/python/${{ env.PYTHON_VERSION }}/lib/python${{ matrix.python-version }}/site-packages/pybind11
         run: |
           cd pipeline && mkdir -p build && cd build
-          which cmake
+          which cmake && cmake --version
           ${PYBIN}/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${PREFIX} -DBUILD_PYTHON_BINDINGS=OFF -DBYPASS_GPU_CHECK=ON -DUSE_CUDA=ON ..
           make -j$(nproc)
 
