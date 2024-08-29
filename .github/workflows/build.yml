@@ -60,5 +60,9 @@ jobs:
           which mpicxx && mpicxx --version
           ${PYBIN}/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${PREFIX} -DBUILD_PYTHON_BINDINGS=OFF -DBYPASS_GPU_CHECK=ON -DUSE_CUDA=ON ..
           make -j$(nproc)
-
-
+          ls -la
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nanoflow
+          path: pipeline/build
