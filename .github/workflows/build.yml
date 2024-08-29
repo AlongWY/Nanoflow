@@ -30,13 +30,14 @@ jobs:
 
       - name: Set up Environments
         run: |
-          echo "PYTHON_VERSION=$(python -c "from os import environ as env; print({'3.7': 'cp37-cp37m', '3.8': 'cp38-cp38', '3.9': 'cp39-cp39', '3.10': 'cp310-cp310', '3.11': 'cp311-cp311', '3.12': 'cp312-cp312' }[${{ matrix.python-version }}])")" >> $GITHUB_ENV
+          echo "PYTHON_VERSION=$(python3 -c "from os import environ as env; print({'3.7': 'cp37-cp37m', '3.8': 'cp38-cp38', '3.9': 'cp39-cp39', '3.10': 'cp310-cp310', '3.11': 'cp311-cp311', '3.12': 'cp312-cp312' }[${{ matrix.python-version }}])")" >> $GITHUB_ENV
 
       - name: Set up Packages
         env:
           PYBIN: /opt/python/${{ env.PYTHON_VERSION }}/bin
         run: |
           yum install -y pigz openmpi openmpi-devel spdlog spdlog-devel
+          pwd && ls -la
           cd 3rdparty/mscclpp && git reset --hard cdaf3aea3d767ba65dd3b08984d76bd50615f92e && sed -i '256d' ./src/bootstrap/bootstrap.cc && cd ../../
           for repo in spdlog; do
             cat 3rdparty/patches/${repo}/*.patch | patch -p1 -d 3rdparty/${repo}
