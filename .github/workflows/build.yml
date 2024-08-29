@@ -45,6 +45,7 @@ jobs:
       
       - name: Build Library
         env:
+          PATH: ${{ env.PATH }}:/usr/lib/openmpi/bin
           PYBIN: /opt/python/${{ env.PYTHON_VERSION }}/bin
           PREFIX: /opt/python/${{ env.PYTHON_VERSION }};/usr/lib/openmpi
           pybind11_DIR: /opt/python/${{ env.PYTHON_VERSION }}/lib/python${{ matrix.python-version }}/site-packages/pybind11
