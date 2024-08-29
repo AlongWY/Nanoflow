@@ -61,6 +61,7 @@ jobs:
           ${PYBIN}/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${PREFIX} -DBUILD_PYTHON_BINDINGS=OFF -DBYPASS_GPU_CHECK=ON -DUSE_CUDA=ON ..
           make -j$(nproc)
           tar -zcvf pllm_cu121_py${{ matrix.python-version }}.tgz pllm_python.* test_*
+          ls -la
       
       - uses: actions/upload-artifact@v4
         with:
@@ -126,6 +127,7 @@ jobs:
           ${PYBIN}/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${PREFIX} -DBUILD_PYTHON_BINDINGS=OFF -DBYPASS_GPU_CHECK=ON -DUSE_CUDA=ON ..
           make -j$(nproc)
           tar -zcvf pllm_cu124_py${{ matrix.python-version }}.tgz pllm_python.* test_*
+          ls -la
       
       - uses: actions/upload-artifact@v4
         with:
